@@ -1,0 +1,35 @@
+.wishItem{
+    display: inline-block;
+    margin: 0;
+    text-align: left;
+    word-break: break-all;
+    white-space: normal;
+    line-break: normal;
+}
+
+.productImg{
+    width: 12em;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.title{
+    display: block;
+}
+
+.price{
+    display: block;
+}
+
+.description{
+    display: block;
+    word-break: break-all;
+    width: auto;
+    color: #929292;
+    white-space: normal;
+}
+
+.actionBar{
+    width: 100%;
+}

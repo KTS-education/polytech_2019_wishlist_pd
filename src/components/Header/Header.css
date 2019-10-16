@@ -1,0 +1,46 @@
+.Header{
+    width: 100%;
+    font-size: 16pt;
+    /*height: 20%; */
+    margin-top: 24pt;
+}
+
+.right{
+    float: right;
+    margin-right: 48pt;
+}
+
+.left{
+    margin-left: 48pt;
+}
+
+.left, .right{
+    display: inline-block;
+}
+
+.my-profile-block .name, .friends-block .name{
+    font-size: 14pt;
+    font-family: "Calibri Light", monospace;
+}
+
+.my-profile-block{
+    display: inline-flex;
+}
+.friends-block{}
+
+/*.name, .friends-avatars, .small-avatar, .avatar{*/
+/*    display: flex;*/
+/*}*/
+
+/*.friends-avatars .avatar{*/
+/*    display: inline-block;*/
+/*    margin-left: -15%;*/
+/*}*/
+
+.friends-avatars{
+    margin-left: 15%;
+}
+
+.friends-block .name{
+    margin-left: -15%;
+}

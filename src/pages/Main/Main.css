@@ -1,0 +1,14 @@
+body{
+
+}
+
+.content-container{
+    text-align: center;
+}
+
+.label{
+    font-family: "Candara Light", monospace;
+    margin-top: 48pt;
+    margin-bottom: 24pt;
+    font-size: 32pt;
+}

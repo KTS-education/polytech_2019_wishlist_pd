@@ -1,0 +1,23 @@
+.defaultBtn{
+    padding: 0.8rem;
+    border: none;
+    border-radius: 25px;
+    background-image: linear-gradient(73deg, #7dc4ff, #6700ff);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.15);
+    word-break: keep-all;
+}
+
+.defaultBtn:focus{
+    outline: none;
+}
+
+.defaultBtn:hover{
+   background-image: linear-gradient(259deg, #7dc4ff, #7dc4ff);
+}
+
+.defaultBtn:active{
+    background-color: #6700ff;
+    background-image: none;
+}
