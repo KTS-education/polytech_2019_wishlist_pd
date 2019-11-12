@@ -1,27 +1,35 @@
-import React from 'react';
-import FriendsList from './../../components/FriendsList/FriendsList.js';
+import React, {Fragment} from 'react';
+import styled from "styled-components";
 import Header from "../../components/Header";
-import DefaultBtn from './../../components/Wishlist/WishItem/ActionsBar/DefaultBtn/DefaultBtn.js';
-import './Friends.css';
-
 import Input from './../../components/Input/Input';
+import FriendsList from "../../components/FriendsList";
+import { Label } from './../../styles/styles.js';
 
+const FriendsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 class Friends extends React.Component {
     render(){
         return(
-            <div className="friends">
-                <Header />
-                <div className="content-container">
-                    <div className="label">
+            <Fragment>
+                <Header
+                    isHideRight
+                    user={this.props.user}
+                    linkToLeft={"/mypage"}
+                    textRight={"Вернуться к поиску"}
+                    linkToRight={"/"}
+                />
+                <FriendsWrapper>
+                    <Label>
                         <span>Мои друзья</span>
-                        <span style={{fontSize: 1 + 'em'}} role="img" aria-label="smiling face with heart-eyes">&#128540;</span>
-                    </div>
-                    <Input/>
-                    <FriendsList user={this.props.user}/>
-                    <DefaultBtn/>
-                </div>
-            </div>
+                        <span className="ec ec-stuck-out-tongue-winking-eye"></span>
+                    </Label>
+                    <Input searchPlaceholder={"Начни вводить имя друга"}/>
+                    <FriendsList friends={this.props.friends}/>
+                </FriendsWrapper>
+            </Fragment>
         )
     }
 }

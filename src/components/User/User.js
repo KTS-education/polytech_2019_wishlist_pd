@@ -1,52 +1,78 @@
-import React from 'react';
-import './User.css';
+import React, {Fragment} from 'react';
+import styled from "styled-components";
+import Avatar from "./Avatar";
 import DefaultBtn from "../Wishlist/WishItem/ActionsBar/DefaultBtn";
+import { ColoredLink } from './../../styles/styles.js';
+
+const ProfileDetails = styled.div`
+  display: ${props => props.inSearch ? "inline-flex" : "flex"};
+`;
+const ProfileDetailsLeft = styled.div`
+  margin: 15pt 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const ProfileDetailsRight = styled.div`
+  display: flex;
+  align-items: end;
+  justify-content: ${props => props.inSearch ? "space-evenly" : "center"};
+  flex-direction: column;
+`;
+const ProfileDetailsUsername = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  flex-grow: ${props => props.inSearch ? "1" : "0"};
+`;
+const ProfileDetailsMeta = styled.div`
+  display: ${props => props.inSearch ? "none" : "flex"};
+  justify-content: center;
+  flex-grow: 1;
+`;
+const ProfileDetailsBtn = styled.div`
+  text-align: left;
+  flex-grow: ${props => props.inSearch ? "2" : "0"};
+`;
+const UserLink = styled(ColoredLink)`
+  margin-right: 25pt;
+`;
 
 class User extends React.Component {
     render() {
-        // <div className="col-lg-4" style={{padding: 15 + "pt", display: "inline-flex"}}>
-        //     <img
-        //         className="photo"
-        //         src={process.env.PUBLIC_URL + this.props.me.img}
-        //         alt={this.props.me.name}/>
-        //     <div className="myProfile">
-        //         <span className="name">{this.props.me.name}</span>
-        //         <span style={{display: "inline"}}>Хочу получить &#128524;</span>
-        //         <span style={{dislay: "inline", color: "#329eff"}}>Хочу подарить &#128526;</span>
-        //         <br/><br/>
-        //         <DefaultBtn style={{fontSize: "12px"}}/>
-        //     </div>
-        // </div>
-        if(this.props.type === "friendPage") {
-            return(
-                <div className="col-md-auto" style={{padding: "15pt", display: "inline-flex"}}>
-                    <img
-                        className="photo"
-                        src={process.env.PUBLIC_URL + this.props.user.img}
-                        alt={this.props.user.name}/>
-                    <div className="searchProfile">
-                        <span className="name">{this.props.user.name}</span>
-                        <span style={{display: "inline"}}>Хочет получить &#128524;</span>
-                        <span style={{display: "inline", color: "#329eff"}}>Хочет подарить &#128526;</span>
-                        <DefaultBtn/>
-                    </div>
-                </div>
-            )
-        }else{
-            return(
-                <div className="col-md-auto" style={{padding: "15pt", display: "inline-flex"}}>
-                    <img
-                        className="photo"
-                        src={process.env.PUBLIC_URL + this.props.user.img}
-                        alt={this.props.user.name}/>
-                    <div className="searchProfile">
-                        <span className="name">{this.props.user.name}</span>
-                        <DefaultBtn/>
-                    </div>
-                </div>
-            )
-        }
-
+        return (
+            <Fragment>
+                <ProfileDetails inSearch={this.props.inSearch}>
+                    <ProfileDetailsLeft inSearch={this.props.inSearch}>
+                        <Avatar src={this.props.user.img} avatarWidth={this.props.avatarWidth}/>
+                    </ProfileDetailsLeft>
+                    <ProfileDetailsRight inSearch={this.props.inSearch}>
+                        <ProfileDetailsUsername inSearch>
+                            <h3>{this.props.user.name}</h3>
+                        </ProfileDetailsUsername>
+                        <ProfileDetailsMeta inSearch={this.props.inSearch}>
+                            <UserLink>
+                                {this.props.wantText} получить
+                                <span className="ec ec-relieved"></span>
+                            </UserLink>
+                            <UserLink>
+                                {this.props.wantText} подарить
+                                <span className="ec ec-sunglasses"></span>
+                            </UserLink>
+                        </ProfileDetailsMeta>
+                        <ProfileDetailsBtn inSearch>
+                            <DefaultBtn
+                                user={this.props.user}
+                                inSearch={this.props.inSearch}
+                                inProfile={"1.5em"}
+                                text={this.props.text}
+                                />
+                        </ProfileDetailsBtn>
+                    </ProfileDetailsRight>
+                </ProfileDetails>
+            </Fragment>
+        )
     }
 }
 

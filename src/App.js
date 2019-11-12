@@ -1,4 +1,5 @@
 import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     BrowserRouter as Router,
     Switch,
@@ -8,67 +9,80 @@ import {
 import Main from "./pages/Main";
 import Friends from "./pages/Friends";
 import FriendPage from "./pages/FriendPage";
+import MyPage from './pages/MyPage';
 
-export default function App() {
-    return (
-        <Router>
-            <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link exact to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/friends-list">Friends</Link>
-                        </li>
-                        <li>
-                            <Link to="/friend">Fiend page</Link>
-                        </li>
-                    </ul>
-                </nav>
+class App extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            myFavorites: [],
+        };
+    }
 
-                <Switch>
-                    <Route path="/friends-list">
-                        <Friends user={FRIENDS} />
-                    </Route>
-                    <Route path="/friend">
-                        <FriendPage user={FRIENDS[0]} products={PRODUCTS} />
-                    </Route>
-                    <Route path="/">
-                        <Main products={PRODUCTS} />
-                    </Route>
-                </Switch>
-            </div>
-        </Router>
-    );
+    componentDidMount() {
+        const results = this.props.products.map(product => {
+            product.isFavorite = false;
+                return product;
+            });
+            this.setState({
+                myFavorites: results
+            });
+    }
+
+    handleMyFavorite = id => {
+        const myFavoriteItems = this.state.myFavorites.map(wishItem => {
+            if (wishItem.id === id) wishItem.isFavorite = !wishItem.isFavorite;
+            console.log(wishItem.isFavorite);
+            return wishItem;
+        });
+        this.setState({
+            myFavorites: myFavoriteItems
+        });
+        console.log(myFavoriteItems)
+    };
+
+    render(){
+        return (
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">Main</Link>
+                            </li>
+                            <li>
+                                <Link to="/friendslist">Search friends</Link>
+                            </li>
+                            <li>
+                                <Link to="/friend">Fiend page</Link>
+                            </li>
+                            <li>
+                                <Link to="/mypage">My page</Link>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <Switch>
+                        <Route path="/friendslist">
+                            <Friends user={this.props.me} friends={this.props.friends} />
+                        </Route>
+                        <Route path="/friend/:id">
+                            <FriendPage user={this.props.me} friend={this.props.friends} products={this.props.products} />
+                        </Route>
+                        <Route path="/mypage">
+                            <MyPage user={this.props.me} products={this.props.products} handleMyFavorite={this.handleMyFavorite} />
+                        </Route>
+
+                        <Route path="/">
+                            <Main user={this.props.me} products={this.props.products} handleMyFavorite={this.handleMyFavorite}/>
+                        </Route>
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
-function Home() {
-    return <h2>Home</h2>;
-}
 
-function About() {
-    return <h2>About</h2>;
-}
 
-function Users() {
-    return <h2>Users</h2>;
-}
-
-const PRODUCTS = [
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-    {img: '/img/iphone.png', title: 'iPhone XR 256GB', price: '70 000 ₽', description: 'Мобильный телефон Apple iPhone XR 256GB (желтый)'},
-];
-
-const FRIENDS = [
-    {img: '/img/avatar.png', name: 'Сергей Чернобровкин'},
-    {img: '/img/avatar.png', name: 'Сергей Чернобровкин'},
-    {img: '/img/avatar.png', name: 'Сергей Чернобровкин'},
-    {img: '/img/avatar.png', name: 'Сергей Чернобровкин'},
-    {img: '/img/avatar.png', name: 'Сергей Чернобровкин'},
-];
+export default App;

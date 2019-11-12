@@ -3,12 +3,8 @@ import './Pending.css'
 
 class Pending extends React.Component{
     render() {
-        return(
-            <div className="Pending">
-                <div className="loader">Loading...</div>
-            </div>
-        )
+        return <div className="loader">Loading...</div>
     }
 }
 
-export default Pending
+export default Pending;
