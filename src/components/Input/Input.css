@@ -1,0 +1,5 @@
+.suggestion-active,
+.suggestions li:hover {
+    background-color: #cbd5f7 !important;
+    color: #ffffff;
+}

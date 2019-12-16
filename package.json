@@ -1,0 +1,44 @@
+{
+  "name": "wishlist",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://maximborodkin.github.io/wishlist-vk",
+  "dependencies": {
+    "@vkontakte/vk-connect": "^1.6.8",
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "gh-pages": "^2.1.1",
+    "lodash": "latest",
+    "prettier": "^1.19.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-md": "^1.12.3",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.2.0",
+    "styled-components": "^4.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "proxy": "https://sberwish.special.ktsstudio.com",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
