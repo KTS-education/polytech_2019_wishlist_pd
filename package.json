@@ -2,13 +2,14 @@
   "name": "wishlist",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://maximborodkin.github.io/wishlist-vk",
+  "homepage": "https://maximborodkin.github.io/wishlist-vk",
   "dependencies": {
     "@vkontakte/vk-connect": "^1.6.8",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "gh-pages": "^2.1.1",
     "lodash": "latest",
+    "prettier": "^1.19.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-md": "^1.12.3",
@@ -27,7 +28,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "https://sberwish.special.ktsstudio.com/",
+  "proxy": "https://sberwish.special.ktsstudio.com",
   "browserslist": {
     "production": [
       ">0.2%",

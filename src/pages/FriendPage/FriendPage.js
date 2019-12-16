@@ -1,45 +1,70 @@
-import React, {Fragment} from 'react';
-import connect from "@vkontakte/vk-connect";
+import React from 'react';
 import { withRouter } from "react-router-dom";
 import Header from "../../components/Header";
 import Wishlist from "../../components/Wishlist";
 import User from "../../components/User";
 import Pending from "../../components/Pending";
+import api from "../../api";
 
 class FriendPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             friend: {},
+            products: [],
             isLoading: false,
         };
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         this.setState({ isLoading: true });
-        const id = this.props.match.params.id;
-        connect.sendPromise("VKWebAppGetAuthToken", {"app_id": 7159872, "scope": "friends"})
-            .then(data => {
-            return connect.sendPromise("VKWebAppCallAPIMethod", {
-                "method": "users.get",
-                "request_id": "5",
-                "params": {
-                    "user_ids": id,
-                    "fields": ["photo_200"],
-                    "v": "5.103",
-                    "access_token": data.access_token,
+
+        const friend = this.props.location.friend;
+
+        this.setState({
+            friend: {
+                id: friend.id,
+                img: friend.img,
+                name: friend.name,
+
+                _id: friend._id,
+            },
+            isLoading: false,
+        });
+
+        const friend_wishlist = await api(
+            `/api/wishlist/get?id=${friend._id}&uid=${friend._id}`,
+            'GET',
+            { id: `${friend._id}` }
+        );
+
+        const products = [];
+        for (let product of friend_wishlist.response.wishlist) {
+            products.push(
+                {
+                    id: product.id,
+                    img: product.photo,
+                    title: product.name,
+                    price: product.price,
+
+                    booked_by: product.booked_by || false,
                 }
-            }).then(friend => {
-                const frd = friend.response[0];
-                this.setState({
-                    friend: {
-                        id: frd.id,
-                        img: frd.photo_200,
-                        name: `${frd.first_name} ${frd.last_name}`
-                    },
-                    isLoading: false,
-                });
-            })
+            )
+        }
+
+        this.setState({
+            products: products,
+        });
+    }
+
+    refreshFriend = (id, booked_by) => {
+        const favoritedProducts = this.state.products.map(product => {
+                if (product.id === id && product.booked_by === booked_by) product.booked_by = false;
+                if (product.id === id && booked_by === false) product.booked_by = window.user_id;
+                return product;
+            });
+        this.setState({
+            products: favoritedProducts
         });
     }
 
@@ -49,7 +74,7 @@ class FriendPage extends React.Component {
             return <Pending/>;
         }
         return (
-            <Fragment>
+            <>
                 <Header
                     isFriendPage
                     user={this.props.user}
@@ -58,16 +83,19 @@ class FriendPage extends React.Component {
                     linkToRight={"/friendslist"}
                 />
                 <User
-                    wantText={"Хочет"}
                     text={"Поделиться"}
                     avatarWidth="150px"
                     user={this.state.friend}
                 />
                 <Wishlist
+                    isFriend
                     text={"Подарю"}
-                    products={this.props.products}
+                    products={this.state.products}
+                    friendId={this.state.friend._id}
+
+                    refreshFriend={this.refreshFriend}
                 />
-            </Fragment>
+            </>
         )
     }
 }

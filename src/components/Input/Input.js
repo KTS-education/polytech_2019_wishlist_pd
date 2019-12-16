@@ -1,75 +1,147 @@
 import React from 'react';
-import styled from "styled-components";
-import api from './../../api.js';
-import Suggestions from "./Suggestions";
+import {
+    Container,
+    InputField,
+    SuggestionsContainer,
+    SuggestionItem,
+    Suggestion,
+    Completion,
+} from './Input-styles';
+import './input.css';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: ${state => state.isEmpty ? "5em" : "2em"};
-`;
-
-const InputField = styled.input`
-  width: 500px;
-  height: 50px;
-  border-radius: 25px;
-  border: solid 1px #dddddd;
-  background-color: #ffffff;
-  padding: 0 12pt;
-  color: #595959;
-  font-size: 1.1em;
-  position: absolute;
-
-  :focus{
-    outline: none;
-`;
 
 class Input extends React.Component{
-    state = {
-        query: '',
-        results: [],
-        isEmpty: true,
+    static defaultProps = {
+        suggestions: []
     };
 
-    getInfo = () => {
-        api(`/api/products/suggest?query=${this.state.query}`)
-            .then(data => {
-                console.log(data);
-                this.setState({
-                    results: data.response.suggestions.completions.map((sugg) => sugg.value),
-                    isEmpty: false,
-                })
-            })
-    };
+    constructor(props) {
+        super(props);
 
-    handleInputChange = () => {
+        this.state = {
+            activeSuggestion: 0,
+            filteredSuggestions: [],
+            showSuggestions: false,
+            userInput: "",
+            products: [],
+        };
+    }
+
+    onChange = () => {
+        const { suggestions } = this.props;
+
+        this.props.onUserInput(
+            this.inputText.value,
+        );
+
         this.setState({
-            query: this.search.value,
-        }, () => {
-            if (this.state.query && this.state.query.length > 1) {
-                if (this.state.query.length % 2 === 0) {
-                    this.getInfo()
-                }
-            } else if (!this.state.query) {
+            activeSuggestion: 0,
+            showSuggestions: true,
+            userInput: this.inputText.value,
+            filteredSuggestions: suggestions,
+        });
+    };
+
+    onClick = e => {
+        this.props.onUserInput(
+            e.currentTarget.innerText,
+            this.getProducts(this.inputText.value)
+        );
+
+        this.setState({
+            activeSuggestion: 0,
+            filteredSuggestions: [],
+            showSuggestions: false,
+            userInput: e.currentTarget.innerText,
+        });
+    };
+
+    onKeyDown = e => {
+        const { activeSuggestion, filteredSuggestions } = this.state;
+
+        // User pressed the enter key
+        if (e.keyCode === 13) {
+
+            this.props.onUserInput(
+                filteredSuggestions[activeSuggestion],
+            );
+
+            this.setState({
+                activeSuggestion: 0,
+                showSuggestions: false,
+                userInput: filteredSuggestions[activeSuggestion]
+            });
+        }
+        // User pressed the up arrow
+        else if (e.keyCode === 38) {
+            if (activeSuggestion === 0) {
+                return;
             }
-        })
+
+            this.setState({ activeSuggestion: activeSuggestion - 1 });
+        }
+        // User pressed the down arrow
+        else if (e.keyCode === 40) {
+            if (activeSuggestion - 1 === filteredSuggestions.length) {
+                return;
+            }
+
+            this.setState({ activeSuggestion: activeSuggestion + 1 });
+        }
     };
 
     render() {
-        let temp;
-        if (!this.state.isEmpty){
-            temp = <Suggestions results={this.state.results} />
+        const {
+            onClick,
+            onKeyDown,
+            state: {
+                activeSuggestion,
+                filteredSuggestions,
+                showSuggestions,
+                userInput
+            }
+        } = this;
+
+        let suggestionsListComponent;
+
+        if (showSuggestions && userInput) {
+            if (filteredSuggestions.length) {
+                suggestionsListComponent = (
+                    <SuggestionsContainer>
+                        {this.props.suggestions.map((sugg, index) => {
+                            console.log(userInput);
+                            let className, suggestion, completion;
+
+                            if (index === activeSuggestion) {
+                                className = "suggestion-active";
+                            }
+
+                            suggestion = <Suggestion>{sugg.substr(0, userInput.length)}</Suggestion>;
+                            completion =  <Completion>{sugg.substr(userInput.length)}</Completion>;
+
+                            return (
+                                <SuggestionItem className={className} key={index} onClick={onClick}>
+                                    {suggestion}{completion}
+                                </SuggestionItem>
+                            );
+                        })}
+                    </SuggestionsContainer>
+                );
+            }
         }
+
         return (
-            <Container isEmpty={this.state.isEmpty}>
-                <InputField
-                    placeholder={this.props.searchPlaceholder}
-                    ref={input => this.search = input}
-                    onChange={this.handleInputChange}
-                />
-                {temp}
-            </Container>
+            <>
+                <Container>
+                    <InputField
+                        onKeyDown={ onKeyDown }
+                        value={ this.props.query }
+                        ref={ (input) => this.inputText = input }
+                        onChange={ this.onChange }
+                    />
+                    {suggestionsListComponent}
+                </Container>
+            </>
         )
     }
 }
